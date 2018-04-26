@@ -1,0 +1,20 @@
+<template>
+	<div class="hello">hello {{msg}}</div>
+</template>
+
+<script>
+	export default	{
+		initData () {
+			return {
+				msg: 'Baidu Ife'
+			}
+		}
+	}
+</script>
+
+<style>
+	.hello{
+		font-size: 28px;
+		color: #3c3c3c;
+	}
+</style>

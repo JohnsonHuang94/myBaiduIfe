@@ -1,0 +1,10 @@
+html,body{
+	width: 100%;
+	height: 100%;
+	overflow-x: hidden;
+	overflow-y: scroll;
+	box-sizing: border-box;
+	color: #353535;
+	-webkit-font-smoothing: antialiased;
+	font-family: "Helvetica Neue","Hiragino Sans GB","Microsoft YaHei","\9ED1\4F53",Arial,sans-serif;
+}
