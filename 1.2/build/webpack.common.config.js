@@ -46,6 +46,15 @@ module.exports = {
 					'css-loader'
 				]
 			},
+			// babel-loader 处理js
+			{
+				test: /\.js$/,
+				exclude: /node_modules/,
+				include: path.resolve(__dirname, '../'),
+				use: {
+					loader: 'babel-loader'
+				}
+			},
 			// 处理图片
 			{
 				test: /\.(png|svg|jpg|gif)$/,

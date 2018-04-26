@@ -3,12 +3,14 @@
 </template>
 
 <script>
+	import data from '../data'
 	export default	{
 		initData () {
 			return {
-				msg: 'Baidu Ife'
+				msg: data.msg
 			}
-		}
+		},
+
 	}
 </script>
 
