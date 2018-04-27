@@ -1,0 +1,95 @@
+<template>
+	<div class="container">
+		<h4 class="center">信息填写</h4>
+		<div class="form-container">
+			<!-- 填写信息区域 -->
+			<div class="flex">
+				<div class="flex-item">
+					<label for="name">姓名：</label><input type="text" value="{= info.name =}" id="name" name="name" placeholder="请输入姓名" >
+				</div>
+				<div class="flex-item">
+					<label for="age">年龄：</label><input type="number" value="{{info.age}}" id="age" name="age" placeholder="请输入年龄" on-input="setInfo($event,'age')">
+				</div>
+				<div class="flex-item">
+					<label for="phoneNumber">手机：</label><input type="number" value="{= info.phoneNumber =}" id="phoneNumber" name="phoneNumber" placeholder="请输入手机号码" on-blur="phoneCheck($event)">
+				</div>
+				<div class="flex-item">
+					<label for="description">简介：</label><input type="text" value="{= info.description =}" id="description" name="description" placeholder="请输入简介">
+				</div>
+			</div>
+		</div>
+		<div class="info-container">
+			<h5>个人信息</h5>
+			<!-- 展示信息区域 -->
+			<div class="info">
+				<div class="info-item">姓名：{{info.name}}</div>
+				<div class="info-item">年龄：{{info.age}}</div>
+				<div class="info-item">年龄：{{info.phoneNumber}}</div>
+				<div class="info-item">简介：{{info.description}}</div>
+			</div>
+		</div>
+	</div>
+</template>
+
+<script>
+	import san, { DataTypes } from 'san';
+	export default	{
+		initData () {
+			return {
+				info: {
+					name: '哈哈哈',
+					age: undefined,
+					phoneNumber: '',
+					description: ''
+				}
+			}
+		},
+		dataTypes: {
+			info: DataTypes.shape({
+				name: DataTypes.string,
+				age: DataTypes.number,
+				phoneNumber: DataTypes.string,
+				description: DataTypes.string
+			})
+		},
+		phoneCheck(event) {
+			var value = this.data.get('info.phoneNumber');
+			if(!/^1[2|3|4|5|6|7|8|9]\d{9}$/.test(value)){
+				throw new Error("手机号码不正确");
+			}
+		},
+		// DataTypes验证数据，由于input输入值始终是string类型，所以DataTypes.number始终会报错，改成单向绑定的形式并在input事件触发的时候set数据
+		setInfo(e,t) {
+			let age = e.target.value;
+			switch(t){
+				case 'age':
+					this.data.set('info.age', isNaN(age)||!age ? undefined : Number(age))
+					break
+				default: 
+					return
+			}
+		}
+	}
+</script>
+
+<style>
+	.flex{
+		flex-wrap: wrap;
+	}
+	.flex-item{
+		flex: 1;
+	}
+	.container{
+		width: 100%;
+		padding: 40px;
+		font-size: 18px;
+		color: #3c3c3c;
+	}
+	input{
+		display: block;
+		line-height: 40px;
+		font-size: 16px;
+		padding: 0 5px;
+		margin: 5px 0 5px 5px;
+	}
+</style>
