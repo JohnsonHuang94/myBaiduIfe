@@ -1,0 +1,195 @@
+<template>
+	<div class="container">
+		<div>
+			<div class="center">
+				<button class="m-btn" on-click="addItem">添加</button>
+			</div>
+			<table border="1" cellpadding="10" cellspacing="0">
+				<thead>
+					<tr>
+						<td class="name"><strong>姓名</strong></td>
+						<td class="statu"><strong>审核状态</strong></td>
+						<td class="operate"><strong>操作</strong></td>
+					</tr>
+				</thead>
+				<tbody>
+					<tr s-for="item, index in items">
+						<td class="name">{{item.name}}</td>
+						<td class="statu">{{item.statu === 0 ? '待审核' : (item.statu === 1 ? '合格' : '不合格')}}</td>
+						<td class="operate">
+							<button on-click="operateItem(index,item.statu)">{{item.statu === 0 ? '审核' : '删除'}}</button>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+		<div class="modal {{modalHidden ? 'hidden' : ''}}">
+			<div>
+				<label for="name">姓名</label>
+				<input type="text" name="name" id="name" value="{= newItem.name =}">
+			</div>
+			<div>
+				<label for="statu">审核状态</label>
+				<select name="statu" id="statu" value="{= newItem.statu =}">
+					<option value="0" selected>待审核</option>
+					<option value="-1">不合格</option>
+					<option value="1">合格</option>
+				</select>
+			</div>
+			<div>
+				<button class="m-btn" on-click="cancleAddItem">取消</button>
+				<button class="m-btn" on-click="sureAddItem">确定</button>
+			</div>
+		</div>
+		<div class="modal {{checkModalHidden ? 'hidden' : ''}}">
+			<div>
+				<label for="c-statu">审核状态</label>
+				<select name="c-statu" id="cStatu" value="{= newItem.statu =}">
+					<option value="0" selected>待审核</option>
+					<option value="-1">不合格</option>
+					<option value="1">合格</option>
+				</select>
+			</div>
+			<div>
+				<button class="m-btn" on-click="cancleChangeItem">取消</button>
+				<button class="m-btn" on-click="sureChangeItem">确定</button>
+			</div>
+		</div>
+		<div class="mask {{maskHidden ? 'hidden' : ''}}"></div>
+	</div>
+</template>
+
+<script>
+	import san, { DataTypes } from 'san';
+	export default	{
+		initData () {
+			// statu: 
+			// 0代表待审核
+			// -1代表不合格			
+			// 1代表合格			
+			return {
+				modalHidden: true,
+				checkModalHidden: true,
+				maskHidden: true,
+				newItem: {
+					name: '',
+					statu: 0
+				},
+				items: [
+					{
+						name: '张三',
+						statu: 1
+					},
+					{
+						name: '李四',
+						statu: -1
+					},
+					{
+						name: '王五',
+						statu: 0
+					}
+				]
+			}
+		},
+		addItem () {
+			this.data.set('modalHidden', false)
+			this.data.set('maskHidden', false)
+		},
+		cancleAddItem () {
+			this.data.set('modalHidden', true)
+			this.data.set('maskHidden', true)
+			this.data.set('newItem', {
+				name: '',
+				statu: 0
+			})
+		},
+		sureAddItem () {
+			let newItem = this.data.get('newItem');
+			newItem.statu = Number(newItem.statu);
+			this.data.set('modalHidden', true);
+			this.data.set('maskHidden', true);
+			this.data.push('items', newItem);
+			this.data.set('newItem', {
+				name: '',
+				statu: 0
+			})
+		},
+		operateItem (index,statu){
+			switch(statu){
+				case 0:
+					this.showCheckModal(index)
+					break
+				case -1:
+				case 1: 
+					this.deleteItem(index)
+					break
+				default:
+					return
+			}
+		},
+		deleteItem (index) {
+			this.data.removeAt('items', index)
+		},
+		// 显示审核modal
+		showCheckModal (index){
+			let newItem = this.data.get('items')[index];
+			this.data.set('checkModalHidden', false)
+			this.data.set('maskHidden', false)
+			this.data.set('newItem', newItem)
+			this.data.set('newItem.nowIndex', index)
+		},
+		cancleChangeItem (){
+			this.data.set('checkModalHidden', true)
+			this.data.set('maskHidden', true)
+			this.data.set('newItem', {
+				name: '',
+				statu: 0
+			})
+		},
+		sureChangeItem (){
+			let nowIndex = this.data.get("newItem.nowIndex");
+			let statu = Number(this.data.get("newItem.statu"));
+			this.data.set(`items[${nowIndex}].statu`, statu);		
+			this.data.set('checkModalHidden', true)
+			this.data.set('maskHidden', true)
+			this.data.set('newItem', {
+				name: '',
+				statu: 0
+			})
+		}
+	}
+</script>
+
+<style scoped>
+	table{
+		margin: 20px auto;
+		text-align: center;
+	}
+	button.m-btn{
+		width: 80px;
+		height: 36px;
+	}
+	.mask{
+		width: 100%;
+		height: 100%;
+		background-color: rgba(0,0,0,0.5);
+		position: fixed;
+		top: 0;
+		left: 0;
+		z-index: 100;
+	}
+	.modal{
+		width: 400px;
+		position: absolute;
+		top: 50%;
+		left: 50%;
+		transform: translate(-50%, -50%);
+		z-index: 120;
+		background-color: #fff;
+    	border-radius: 10px;
+    	padding: 20px;
+	}
+	.modal > div:not(:last-child){
+		margin-bottom: 10px;
+	}
+</style>

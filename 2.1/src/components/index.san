@@ -1,0 +1,26 @@
+<template>
+	<div class="container">
+		<router-link to="/form" class="task-item">2.1</router-link>
+		<router-link to="/s-for" class="task-item">2.2</router-link>
+	</div>
+</template>
+
+<script>
+	import san, { DataTypes } from 'san';
+	import { Link } from 'san-router';
+	export default	{
+		components: {
+	        'router-link': Link
+	    }
+	}
+</script>
+
+<style>
+	.task-item{
+		padding: 5px 10px;
+		margin-right: 20px;
+		border: 1px solid #3c3c3c;
+		color: #3c3c3c;
+		display: inline-block;
+	}
+</style>
